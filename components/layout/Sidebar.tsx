@@ -73,7 +73,7 @@ export default function Sidebar({
                 CivilOS
               </div>
               <div className="text-white/40 text-2xs leading-tight">
-                Narayan Constructions
+                Civil Oasis Engineering
               </div>
             </div>
           </div>
@@ -184,7 +184,7 @@ export default function Sidebar({
             </div>
             <div>
               <div className="text-white/80 text-xs font-medium">
-                Pushkar Jha
+                COE, Pushkar Jha
               </div>
               <div className="text-white/30 text-2xs">Project Manager</div>
             </div>
