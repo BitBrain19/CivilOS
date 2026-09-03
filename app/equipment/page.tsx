@@ -1,8 +1,12 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useProject } from '@/lib/context';
-import { getEquipmentByProject, equipmentLog, EquipmentEntry } from '@/data/equipment';
+import { useState } from "react";
+import { useProject } from "@/lib/context";
+import {
+  getEquipmentByProject,
+  equipmentLog,
+  EquipmentEntry,
+} from "@/data/equipment";
 import {
   Truck,
   AlertTriangle,
@@ -15,53 +19,58 @@ import {
   X,
   Play,
   Pause,
-} from 'lucide-react';
+} from "lucide-react";
 
 export default function EquipmentPage() {
   const { activeProject } = useProject();
   const initialEquip = getEquipmentByProject(activeProject.id);
-  const [equipmentList, setEquipmentList] = useState<EquipmentEntry[]>(initialEquip);
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [equipmentList, setEquipmentList] =
+    useState<EquipmentEntry[]>(initialEquip);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [toastMsg, setToastMsg] = useState('');
+  const [toastMsg, setToastMsg] = useState("");
 
   // New Equipment Form State
-  const [eqName, setEqName] = useState('');
-  const [eqMake, setEqMake] = useState('');
-  const [operator, setOperator] = useState('');
-  const [activity, setActivity] = useState('');
-  const [status, setStatus] = useState<'active' | 'idle' | 'standby'>('active');
+  const [eqName, setEqName] = useState("");
+  const [eqMake, setEqMake] = useState("");
+  const [operator, setOperator] = useState("");
+  const [activity, setActivity] = useState("");
+  const [status, setStatus] = useState<"active" | "idle" | "standby">("active");
 
   const filtered = equipmentList.filter((e) => {
-    if (statusFilter === 'all') return true;
+    if (statusFilter === "all") return true;
     return e.status === statusFilter;
   });
 
-  const totalIdleDays = equipmentList.reduce((acc, curr) => acc + curr.idleDaysThisMonth, 0);
-  const activeCount = equipmentList.filter((e) => e.status === 'active').length;
-  const idleCount = equipmentList.filter((e) => e.status === 'idle').length;
+  const totalIdleDays = equipmentList.reduce(
+    (acc, curr) => acc + curr.idleDaysThisMonth,
+    0,
+  );
+  const activeCount = equipmentList.filter((e) => e.status === "active").length;
+  const idleCount = equipmentList.filter((e) => e.status === "idle").length;
   const avgUtilization = Math.round(
-    equipmentList.reduce((acc, curr) => acc + curr.utilizationPct, 0) / (equipmentList.length || 1)
+    equipmentList.reduce((acc, curr) => acc + curr.utilizationPct, 0) /
+      (equipmentList.length || 1),
   );
 
   const toggleStatus = (id: string) => {
     setEquipmentList((prev) =>
       prev.map((item) => {
         if (item.id === id) {
-          const nextStatus = item.status === 'active' ? 'idle' : 'active';
+          const nextStatus = item.status === "active" ? "idle" : "active";
           return {
             ...item,
             status: nextStatus,
-            utilizationPct: nextStatus === 'active' ? 75 : 0,
-            hoursWorked: nextStatus === 'active' ? 6 : 0,
-            hoursIdle: nextStatus === 'active' ? 2 : 8,
+            utilizationPct: nextStatus === "active" ? 75 : 0,
+            hoursWorked: nextStatus === "active" ? 6 : 0,
+            hoursIdle: nextStatus === "active" ? 2 : 8,
           };
         }
         return item;
-      })
+      }),
     );
-    setToastMsg('Equipment operational state updated.');
-    setTimeout(() => setToastMsg(''), 3000);
+    setToastMsg("Equipment operational state updated.");
+    setTimeout(() => setToastMsg(""), 3000);
   };
 
   const handleAddEquipment = (e: React.FormEvent) => {
@@ -73,29 +82,29 @@ export default function EquipmentPage() {
       projectId: activeProject.id,
       equipmentId: `EQ-${Date.now().toString().slice(-4)}`,
       name: eqName,
-      make: eqMake || 'Standard Make',
-      operator: operator || 'Assigned Operator',
-      date: new Date().toISOString().split('T')[0],
-      checkIn: status === 'active' ? '08:00' : '—',
+      make: eqMake || "Standard Make",
+      operator: operator || "Assigned Operator",
+      date: new Date().toISOString().split("T")[0],
+      checkIn: status === "active" ? "08:00" : "—",
       checkOut: null,
-      hoursWorked: status === 'active' ? 8 : 0,
-      hoursIdle: status === 'active' ? 1 : 9,
-      utilizationPct: status === 'active' ? 88 : 0,
-      idleDaysThisMonth: status === 'idle' ? 1 : 0,
+      hoursWorked: status === "active" ? 8 : 0,
+      hoursIdle: status === "active" ? 1 : 9,
+      utilizationPct: status === "active" ? 88 : 0,
+      idleDaysThisMonth: status === "idle" ? 1 : 0,
       status: status,
-      activity: activity || 'Site civil works',
-      fuelConsumed: status === 'active' ? 25 : 0,
-      remarks: 'Added to live machinery roster.',
+      activity: activity || "Site civil works",
+      fuelConsumed: status === "active" ? 25 : 0,
+      remarks: "Added to live machinery roster.",
     };
 
     setEquipmentList([newEntry, ...equipmentList]);
     setIsModalOpen(false);
     setToastMsg(`${newEntry.name} successfully registered in fleet roster.`);
-    setEqName('');
-    setEqMake('');
-    setOperator('');
-    setActivity('');
-    setTimeout(() => setToastMsg(''), 4000);
+    setEqName("");
+    setEqMake("");
+    setOperator("");
+    setActivity("");
+    setTimeout(() => setToastMsg(""), 4000);
   };
 
   return (
@@ -103,9 +112,12 @@ export default function EquipmentPage() {
       {/* Header action banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-xl border border-border shadow-sm-warm">
         <div>
-          <h2 className="text-base font-semibold text-ink">Heavy Plant & Equipment Log</h2>
+          <h2 className="text-base font-semibold text-ink">
+            Heavy Plant & Equipment Log
+          </h2>
           <p className="text-xs text-muted mt-0.5">
-            Machinery check-in/out, runtime hours, diesel consumption, and idle asset variance alerts
+            Machinery check-in/out, runtime hours, diesel consumption, and idle
+            asset variance alerts
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -131,40 +143,62 @@ export default function EquipmentPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-xl border border-border shadow-sm-warm">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted font-medium">Active Fleet Assets</span>
+            <span className="text-xs text-muted font-medium">
+              Active Fleet Assets
+            </span>
             <Truck size={16} className="text-accent" />
           </div>
-          <div className="text-2xl font-semibold text-ink mt-2">{activeCount} Running</div>
-          <div className="text-2xs text-muted mt-1">Out of {equipmentList.length} total machinery on site</div>
+          <div className="text-2xl font-semibold text-ink mt-2">
+            {activeCount} Running
+          </div>
+          <div className="text-2xs text-muted mt-1">
+            Out of {equipmentList.length} total machinery on site
+          </div>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-border shadow-sm-warm">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted font-medium">Average Utilization</span>
+            <span className="text-xs text-muted font-medium">
+              Average Utilization
+            </span>
             <Gauge size={16} className="text-muted" />
           </div>
-          <div className="text-2xl font-semibold text-ink mt-2">{avgUtilization}%</div>
-          <div className="text-2xs text-muted mt-1">Target benchmark &ge; 75% runtime</div>
+          <div className="text-2xl font-semibold text-ink mt-2">
+            {avgUtilization}%
+          </div>
+          <div className="text-2xs text-muted mt-1">
+            Target benchmark &ge; 75% runtime
+          </div>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-rust/30 shadow-sm-warm bg-rust/[0.02]">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-rust font-medium">Idle Plant Warning</span>
+            <span className="text-xs text-rust font-medium">
+              Idle Plant Warning
+            </span>
             <AlertTriangle size={16} className="text-rust" />
           </div>
-          <div className="text-2xl font-semibold text-rust mt-2">{idleCount} Assets Idle</div>
-          <div className="text-2xs text-muted mt-1">{totalIdleDays} cumulative idle days this month</div>
+          <div className="text-2xl font-semibold text-rust mt-2">
+            {idleCount} Assets Idle
+          </div>
+          <div className="text-2xs text-muted mt-1">
+            {totalIdleDays} cumulative idle days this month
+          </div>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-border shadow-sm-warm">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted font-medium">Diesel Consumed Today</span>
+            <span className="text-xs text-muted font-medium">
+              Diesel Consumed Today
+            </span>
             <Fuel size={16} className="text-muted" />
           </div>
           <div className="text-2xl font-semibold text-ink mt-2">
             {equipmentList.reduce((acc, curr) => acc + curr.fuelConsumed, 0)} L
           </div>
-          <div className="text-2xs text-muted mt-1">HSD logged via fuel indent book</div>
+          <div className="text-2xs text-muted mt-1">
+            HSD logged via fuel indent book
+          </div>
         </div>
       </div>
 
@@ -172,23 +206,27 @@ export default function EquipmentPage() {
       <div className="bg-white rounded-xl border border-border shadow-sm-warm overflow-hidden">
         {/* Table filter bar */}
         <div className="p-4 border-b border-border flex flex-col sm:flex-row items-center justify-between gap-3 bg-surface/40">
-          <div className="text-xs font-semibold text-ink">Plant & Machinery Operations Sheet</div>
+          <div className="text-xs font-semibold text-ink">
+            Plant & Machinery Operations Sheet
+          </div>
           <div className="flex items-center gap-2">
             <Filter size={13} className="text-muted" />
-            <span className="text-2xs text-muted uppercase tracking-wider">Filter:</span>
+            <span className="text-2xs text-muted uppercase tracking-wider">
+              Filter:
+            </span>
             <div className="flex gap-1">
               {[
-                { id: 'all', label: 'All Equipment' },
-                { id: 'active', label: 'Active Working' },
-                { id: 'idle', label: 'Idle / Flagged' },
+                { id: "all", label: "All Equipment" },
+                { id: "active", label: "Active Working" },
+                { id: "idle", label: "Idle / Flagged" },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setStatusFilter(tab.id)}
                   className={`text-2xs px-2.5 py-1 rounded-md transition-colors ${
                     statusFilter === tab.id
-                      ? 'bg-accent text-white font-medium'
-                      : 'text-muted hover:bg-surface border border-transparent'
+                      ? "bg-accent text-white font-medium"
+                      : "text-muted hover:bg-surface border border-transparent"
                   }`}
                 >
                   {tab.label}
@@ -217,19 +255,24 @@ export default function EquipmentPage() {
             </thead>
             <tbody>
               {filtered.map((item) => {
-                const isIdle = item.status === 'idle';
+                const isIdle = item.status === "idle";
                 const hasHighIdleDays = item.idleDaysThisMonth >= 5;
 
                 return (
-                  <tr key={item.id} className={isIdle ? 'bg-rust/[0.03]' : ''}>
-                    <td className="font-mono text-2xs text-accent font-semibold">{item.equipmentId}</td>
+                  <tr key={item.id} className={isIdle ? "bg-rust/[0.03]" : ""}>
+                    <td className="font-mono text-2xs text-accent font-semibold">
+                      {item.equipmentId}
+                    </td>
                     <td>
                       <div className="font-medium text-ink">{item.name}</div>
                       <div className="text-2xs text-muted">{item.make}</div>
                     </td>
-                    <td className="text-2xs text-ink font-medium">{item.operator}</td>
+                    <td className="text-2xs text-ink font-medium">
+                      {item.operator}
+                    </td>
                     <td className="text-2xs text-muted tabular-nums">
-                      {item.checkIn} {item.checkOut ? `→ ${item.checkOut}` : '→ Active'}
+                      {item.checkIn}{" "}
+                      {item.checkOut ? `→ ${item.checkOut}` : "→ Active"}
                     </td>
                     <td className="text-right tabular-nums font-semibold text-ink">
                       {item.hoursWorked} hrs
@@ -240,49 +283,63 @@ export default function EquipmentPage() {
                           <div
                             className={`h-full rounded-full ${
                               item.utilizationPct >= 75
-                                ? 'bg-success'
+                                ? "bg-success"
                                 : item.utilizationPct > 0
-                                ? 'bg-rust'
-                                : 'bg-border-strong'
+                                  ? "bg-rust"
+                                  : "bg-border-strong"
                             }`}
                             style={{ width: `${item.utilizationPct}%` }}
                           />
                         </div>
-                        <span className="text-2xs font-medium tabular-nums">{item.utilizationPct}%</span>
+                        <span className="text-2xs font-medium tabular-nums">
+                          {item.utilizationPct}%
+                        </span>
                       </div>
                     </td>
                     <td className="text-right tabular-nums">
                       <span
                         className={`font-medium ${
-                          hasHighIdleDays ? 'text-rust font-semibold flex items-center justify-end gap-1' : 'text-muted'
+                          hasHighIdleDays
+                            ? "text-rust font-semibold flex items-center justify-end gap-1"
+                            : "text-muted"
                         }`}
                       >
                         {hasHighIdleDays && <AlertTriangle size={12} />}
                         {item.idleDaysThisMonth} days
                       </span>
                     </td>
-                    <td className="text-right tabular-nums text-muted">{item.fuelConsumed} L</td>
+                    <td className="text-right tabular-nums text-muted">
+                      {item.fuelConsumed} L
+                    </td>
                     <td>
-                      {item.status === 'active' && <span className="badge badge-success">Running</span>}
-                      {item.status === 'idle' && (
+                      {item.status === "active" && (
+                        <span className="badge badge-success">Running</span>
+                      )}
+                      {item.status === "idle" && (
                         <span className="badge badge-rust flex items-center gap-1">
                           <AlertTriangle size={10} /> Idle Alert
                         </span>
                       )}
-                      {item.status === 'standby' && <span className="badge badge-muted">Standby</span>}
+                      {item.status === "standby" && (
+                        <span className="badge badge-muted">Standby</span>
+                      )}
                     </td>
                     <td className="max-w-xs">
-                      <div className="text-xs text-ink font-medium truncate">{item.activity}</div>
-                      <div className="text-2xs text-muted italic truncate">{item.remarks}</div>
+                      <div className="text-xs text-ink font-medium truncate">
+                        {item.activity}
+                      </div>
+                      <div className="text-2xs text-muted italic truncate">
+                        {item.remarks}
+                      </div>
                     </td>
                     <td className="text-center">
                       <button
                         onClick={() => toggleStatus(item.id)}
-                        title={isIdle ? 'Mark as Running' : 'Mark as Idle'}
+                        title={isIdle ? "Mark as Running" : "Mark as Idle"}
                         className={`p-1.5 rounded-md border text-2xs transition-colors ${
                           isIdle
-                            ? 'bg-success/10 text-success border-success/30 hover:bg-success/20'
-                            : 'bg-surface text-muted border-border hover:bg-rust/10 hover:text-rust hover:border-rust/30'
+                            ? "bg-success/10 text-success border-success/30 hover:bg-success/20"
+                            : "bg-surface text-muted border-border hover:bg-rust/10 hover:text-rust hover:border-rust/30"
                         }`}
                       >
                         {isIdle ? <Play size={12} /> : <Pause size={12} />}
@@ -303,7 +360,9 @@ export default function EquipmentPage() {
             <div className="px-6 py-4 bg-ink text-white flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Truck size={16} className="text-accent-light" />
-                <h3 className="text-sm font-semibold">Register Plant / Machinery</h3>
+                <h3 className="text-sm font-semibold">
+                  Register Plant / Machinery
+                </h3>
               </div>
               <button
                 onClick={() => setIsModalOpen(false)}

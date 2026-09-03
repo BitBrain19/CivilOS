@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useProject } from '@/lib/context';
-import { getDPRByProject, DPREntry } from '@/data/dpr';
+import { useState } from "react";
+import { useProject } from "@/lib/context";
+import { getDPRByProject, DPREntry } from "@/data/dpr";
 import {
   BadgeCheck,
   CheckCircle2,
@@ -15,13 +15,13 @@ import {
   FileText,
   UserCheck,
   CheckCheck,
-} from 'lucide-react';
+} from "lucide-react";
 
 export default function CertificationPage() {
   const { activeProject } = useProject();
   const initialEntries = getDPRByProject(activeProject.id);
   const [entries, setEntries] = useState<DPREntry[]>(initialEntries);
-  const [toastMsg, setToastMsg] = useState('');
+  const [toastMsg, setToastMsg] = useState("");
   const [selectedEntry, setSelectedEntry] = useState<DPREntry | null>(null);
 
   const pendingEntries = entries.filter((e) => !e.certified);
@@ -35,16 +35,18 @@ export default function CertificationPage() {
           return {
             ...e,
             certified: true,
-            certifiedBy: 'Er. Dipendra Shrestha (Site Engineer)',
+            certifiedBy: "Er. Dipendra Shrestha (Site Engineer)",
             certifiedAt: new Date().toISOString(),
             mbRef: `MB-${activeProject.code}-${Date.now().toString().slice(-3)}`,
           };
         }
         return e;
-      })
+      }),
     );
-    setToastMsg(`DPR Item "${target?.boqItemDesc}" certified and forwarded to Digital Measurement Book.`);
-    setTimeout(() => setToastMsg(''), 4000);
+    setToastMsg(
+      `DPR Item "${target?.boqItemDesc}" certified and forwarded to Digital Measurement Book.`,
+    );
+    setTimeout(() => setToastMsg(""), 4000);
   };
 
   const handleCertifyAllPending = () => {
@@ -55,16 +57,18 @@ export default function CertificationPage() {
           return {
             ...e,
             certified: true,
-            certifiedBy: 'Er. Dipendra Shrestha (Site Engineer)',
+            certifiedBy: "Er. Dipendra Shrestha (Site Engineer)",
             certifiedAt: new Date().toISOString(),
             mbRef: `MB-${activeProject.code}-${Date.now().toString().slice(-3)}`,
           };
         }
         return e;
-      })
+      }),
     );
-    setToastMsg(`All ${pendingEntries.length} pending site entries certified with engineer sign-off!`);
-    setTimeout(() => setToastMsg(''), 4000);
+    setToastMsg(
+      `All ${pendingEntries.length} pending site entries certified with engineer sign-off!`,
+    );
+    setTimeout(() => setToastMsg(""), 4000);
   };
 
   return (
@@ -72,9 +76,12 @@ export default function CertificationPage() {
       {/* Header action banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-xl border border-border shadow-sm-warm">
         <div>
-          <h2 className="text-base font-semibold text-ink">Engineer Certification & Quantity Sign-off</h2>
+          <h2 className="text-base font-semibold text-ink">
+            Engineer Certification & Quantity Sign-off
+          </h2>
           <p className="text-xs text-muted mt-0.5">
-            Verification workflow of site daily entries before locking quantities into the Digital Measurement Book (MB)
+            Verification workflow of site daily entries before locking
+            quantities into the Digital Measurement Book (MB)
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -102,29 +109,47 @@ export default function CertificationPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white p-4 rounded-xl border border-rust/30 shadow-sm-warm bg-rust/[0.02]">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-rust font-medium">Awaiting Site Verification</span>
+            <span className="text-xs text-rust font-medium">
+              Awaiting Site Verification
+            </span>
             <Clock size={16} className="text-rust" />
           </div>
-          <div className="text-2xl font-semibold text-rust mt-2">{pendingEntries.length} Entries</div>
-          <div className="text-2xs text-muted mt-1">Requires physical dimension & photo validation</div>
+          <div className="text-2xl font-semibold text-rust mt-2">
+            {pendingEntries.length} Entries
+          </div>
+          <div className="text-2xs text-muted mt-1">
+            Requires physical dimension & photo validation
+          </div>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-border shadow-sm-warm">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-success font-medium">Certified & Locked to MB</span>
+            <span className="text-xs text-success font-medium">
+              Certified & Locked to MB
+            </span>
             <Lock size={16} className="text-success" />
           </div>
-          <div className="text-2xl font-semibold text-success mt-2">{certifiedEntries.length} Records</div>
-          <div className="text-2xs text-muted mt-1">Signed by Er. Dipendra Shrestha (NEC Reg: 14209)</div>
+          <div className="text-2xl font-semibold text-success mt-2">
+            {certifiedEntries.length} Records
+          </div>
+          <div className="text-2xs text-muted mt-1">
+            Signed by Er. Dipendra Shrestha (NEC Reg: 14209)
+          </div>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-border shadow-sm-warm">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted font-medium">Measurement Audit Trail</span>
+            <span className="text-xs text-muted font-medium">
+              Measurement Audit Trail
+            </span>
             <ShieldCheck size={16} className="text-accent" />
           </div>
-          <div className="text-2xl font-semibold text-ink mt-2">100% Verified</div>
-          <div className="text-2xs text-muted mt-1">Geotagged & timestamped field evidence</div>
+          <div className="text-2xl font-semibold text-ink mt-2">
+            100% Verified
+          </div>
+          <div className="text-2xs text-muted mt-1">
+            Geotagged & timestamped field evidence
+          </div>
         </div>
       </div>
 
@@ -133,21 +158,34 @@ export default function CertificationPage() {
         <div className="px-5 py-4 border-b border-border bg-surface/30 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-2.5 h-2.5 rounded-full bg-rust animate-pulse" />
-            <h3 className="text-sm font-semibold text-ink">Pending Engineer Approval Queue</h3>
+            <h3 className="text-sm font-semibold text-ink">
+              Pending Engineer Approval Queue
+            </h3>
           </div>
-          <span className="badge badge-rust">{pendingEntries.length} items to certify</span>
+          <span className="badge badge-rust">
+            {pendingEntries.length} items to certify
+          </span>
         </div>
 
         {pendingEntries.length > 0 ? (
           <div className="divide-y divide-border">
             {pendingEntries.map((entry) => (
-              <div key={entry.id} className="p-5 hover:bg-surface/20 transition-colors">
+              <div
+                key={entry.id}
+                className="p-5 hover:bg-surface/20 transition-colors"
+              >
                 <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                   <div className="flex-1 space-y-2">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-sm text-ink">{entry.boqItemDesc}</span>
-                      <span className="badge badge-muted text-2xs font-mono">{entry.id}</span>
-                      <span className="badge badge-rust text-2xs">Pending Sign-off</span>
+                      <span className="font-semibold text-sm text-ink">
+                        {entry.boqItemDesc}
+                      </span>
+                      <span className="badge badge-muted text-2xs font-mono">
+                        {entry.id}
+                      </span>
+                      <span className="badge badge-rust text-2xs">
+                        Pending Sign-off
+                      </span>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-2xs text-muted pt-1">
@@ -167,7 +205,10 @@ export default function CertificationPage() {
 
                     {entry.remarks && (
                       <div className="text-xs text-muted bg-surface/70 border border-border/60 rounded-md p-2.5">
-                        <span className="font-medium text-ink">Site Notes:</span> {entry.remarks}
+                        <span className="font-medium text-ink">
+                          Site Notes:
+                        </span>{" "}
+                        {entry.remarks}
                       </div>
                     )}
 
@@ -179,7 +220,10 @@ export default function CertificationPage() {
                       </div>
                       <div className="flex items-center gap-1.5 px-2.5 py-1 bg-surface border border-border rounded text-2xs text-muted">
                         <Clock size={12} />
-                        <span>Logged {new Date(entry.timestamp).toLocaleTimeString()}</span>
+                        <span>
+                          Logged{" "}
+                          {new Date(entry.timestamp).toLocaleTimeString()}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -188,9 +232,14 @@ export default function CertificationPage() {
                   <div className="flex sm:flex-col items-end justify-between sm:justify-start gap-3 flex-shrink-0">
                     <div className="text-right">
                       <div className="text-lg font-bold text-ink">
-                        {entry.quantityToday} <span className="text-xs font-normal text-muted">{entry.unit}</span>
+                        {entry.quantityToday}{" "}
+                        <span className="text-xs font-normal text-muted">
+                          {entry.unit}
+                        </span>
                       </div>
-                      <div className="text-2xs text-muted">Claimed by site supervisor</div>
+                      <div className="text-2xs text-muted">
+                        Claimed by site supervisor
+                      </div>
                     </div>
 
                     <button
@@ -208,8 +257,12 @@ export default function CertificationPage() {
         ) : (
           <div className="py-12 text-center text-muted">
             <CheckCircle2 size={32} className="mx-auto text-success/60 mb-2" />
-            <div className="text-sm font-medium text-ink">All site entries certified!</div>
-            <div className="text-xs text-muted mt-0.5">There are no pending measurements awaiting engineer sign-off.</div>
+            <div className="text-sm font-medium text-ink">
+              All site entries certified!
+            </div>
+            <div className="text-xs text-muted mt-0.5">
+              There are no pending measurements awaiting engineer sign-off.
+            </div>
           </div>
         )}
       </div>
@@ -219,9 +272,13 @@ export default function CertificationPage() {
         <div className="px-5 py-4 border-b border-border bg-surface/30 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Lock size={15} className="text-success" />
-            <h3 className="text-sm font-semibold text-ink">Certified & Locked Records (MB Reference Log)</h3>
+            <h3 className="text-sm font-semibold text-ink">
+              Certified & Locked Records (MB Reference Log)
+            </h3>
           </div>
-          <span className="badge badge-success">{certifiedEntries.length} locked</span>
+          <span className="badge badge-success">
+            {certifiedEntries.length} locked
+          </span>
         </div>
 
         <div className="overflow-x-auto">
@@ -240,16 +297,24 @@ export default function CertificationPage() {
             <tbody>
               {certifiedEntries.map((c) => (
                 <tr key={c.id}>
-                  <td className="font-mono text-2xs text-accent font-semibold">{c.mbRef || 'MB-SRC-2024-048'}</td>
+                  <td className="font-mono text-2xs text-accent font-semibold">
+                    {c.mbRef || "MB-SRC-2024-048"}
+                  </td>
                   <td className="font-medium text-ink">{c.boqItemDesc}</td>
-                  <td className="text-2xs text-muted whitespace-nowrap">{c.date}</td>
+                  <td className="text-2xs text-muted whitespace-nowrap">
+                    {c.date}
+                  </td>
                   <td className="text-2xs text-muted">{c.gang}</td>
                   <td className="text-right font-semibold text-ink tabular-nums">
                     {c.quantityToday} {c.unit}
                   </td>
                   <td>
-                    <div className="text-xs font-medium text-ink">{c.certifiedBy || 'Er. Dipendra Shrestha'}</div>
-                    <div className="text-2xs text-muted">Digital Signature Verified</div>
+                    <div className="text-xs font-medium text-ink">
+                      {c.certifiedBy || "Er. Dipendra Shrestha"}
+                    </div>
+                    <div className="text-2xs text-muted">
+                      Digital Signature Verified
+                    </div>
                   </td>
                   <td>
                     <span className="badge badge-success flex items-center gap-1">

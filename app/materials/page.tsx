@@ -1,8 +1,13 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useProject } from '@/lib/context';
-import { getMaterialsByProject, grnEntries, MaterialRow, GRNEntry } from '@/data/materials';
+import { useState } from "react";
+import { useProject } from "@/lib/context";
+import {
+  getMaterialsByProject,
+  grnEntries,
+  MaterialRow,
+  GRNEntry,
+} from "@/data/materials";
 import {
   Package,
   Plus,
@@ -15,39 +20,47 @@ import {
   Truck,
   CheckCircle2,
   X,
-} from 'lucide-react';
+} from "lucide-react";
 
 export default function MaterialsPage() {
   const { activeProject } = useProject();
   const initialMaterials = getMaterialsByProject(activeProject.id);
   const [materials, setMaterials] = useState<MaterialRow[]>(initialMaterials);
-  const [grnList, setGrnList] = useState<GRNEntry[]>(grnEntries.filter((g) => g.projectId === activeProject.id));
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [grnList, setGrnList] = useState<GRNEntry[]>(
+    grnEntries.filter((g) => g.projectId === activeProject.id),
+  );
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState<string>("all");
   const [isGRNModalOpen, setIsGRNModalOpen] = useState(false);
-  const [grnSuccessMsg, setGrnSuccessMsg] = useState('');
+  const [grnSuccessMsg, setGrnSuccessMsg] = useState("");
 
   // Form state for GRN Modal
-  const [supplier, setSupplier] = useState('');
-  const [vehicleNo, setVehicleNo] = useState('');
-  const [selectedMaterialCode, setSelectedMaterialCode] = useState('CEM-43');
-  const [receivedQty, setReceivedQty] = useState('');
-  const [unitRate, setUnitRate] = useState('');
-  const [remarks, setRemarks] = useState('');
+  const [supplier, setSupplier] = useState("");
+  const [vehicleNo, setVehicleNo] = useState("");
+  const [selectedMaterialCode, setSelectedMaterialCode] = useState("CEM-43");
+  const [receivedQty, setReceivedQty] = useState("");
+  const [unitRate, setUnitRate] = useState("");
+  const [remarks, setRemarks] = useState("");
 
   const filteredMaterials = materials.filter((m) => {
     const matchesSearch =
       m.material.toLowerCase().includes(searchTerm.toLowerCase()) ||
       m.materialCode.toLowerCase().includes(searchTerm.toLowerCase());
-    if (filterStatus === 'all') return matchesSearch;
-    if (filterStatus === 'over-consumed') return matchesSearch && m.status === 'over-consumed';
-    if (filterStatus === 'low-stock') return matchesSearch && m.status === 'low-stock';
+    if (filterStatus === "all") return matchesSearch;
+    if (filterStatus === "over-consumed")
+      return matchesSearch && m.status === "over-consumed";
+    if (filterStatus === "low-stock")
+      return matchesSearch && m.status === "low-stock";
     return matchesSearch;
   });
 
   const totalVarianceCost = materials.reduce((acc, curr) => {
     // Estimating cost of variance
-    const rateApprox = curr.materialCode.includes('CEM') ? 820 : curr.materialCode.includes('TMT') ? 115 : 2000;
+    const rateApprox = curr.materialCode.includes("CEM")
+      ? 820
+      : curr.materialCode.includes("TMT")
+        ? 115
+        : 2000;
     return acc + (curr.variance > 0 ? curr.variance * rateApprox : 0);
   }, 0);
 
@@ -55,26 +68,30 @@ export default function MaterialsPage() {
     e.preventDefault();
     if (!receivedQty || !supplier) return;
 
-    const targetMat = materials.find((m) => m.materialCode === selectedMaterialCode);
+    const targetMat = materials.find(
+      (m) => m.materialCode === selectedMaterialCode,
+    );
     const qtyNum = parseFloat(receivedQty);
-    const rateNum = parseFloat(unitRate) || (selectedMaterialCode === 'CEM-43' ? 820 : 115);
+    const rateNum =
+      parseFloat(unitRate) || (selectedMaterialCode === "CEM-43" ? 820 : 115);
 
     const newGRN: GRNEntry = {
       id: `grn-${Date.now()}`,
       projectId: activeProject.id,
       grnNo: `GRN-${activeProject.code}-${Date.now().toString().slice(-4)}`,
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split("T")[0],
       supplier,
-      vehicleNo: vehicleNo || 'Ba 2 Kha 9921',
+      vehicleNo: vehicleNo || "Ba 2 Kha 9921",
       materialCode: selectedMaterialCode,
-      material: targetMat?.material || 'Material Stock',
-      unit: targetMat?.unit || 'units',
+      material: targetMat?.material || "Material Stock",
+      unit: targetMat?.unit || "units",
       orderedQty: qtyNum,
       receivedQty: qtyNum,
       rate: rateNum,
       amount: qtyNum * rateNum,
-      receivedBy: 'Prashant Shrestha (Site Engineer)',
-      remarks: remarks || 'Received in good condition and verified at site yard.',
+      receivedBy: "Prashant Shrestha (Site Engineer)",
+      remarks:
+        remarks || "Received in good condition and verified at site yard.",
     };
 
     setGrnList([newGRN, ...grnList]);
@@ -89,21 +106,28 @@ export default function MaterialsPage() {
             ...m,
             received: updatedRec,
             closingStock: updatedClosing,
-            status: updatedClosing < 300 && m.materialCode.includes('CEM') ? 'low-stock' : m.variance > 200 ? 'over-consumed' : 'ok',
+            status:
+              updatedClosing < 300 && m.materialCode.includes("CEM")
+                ? "low-stock"
+                : m.variance > 200
+                  ? "over-consumed"
+                  : "ok",
           };
         }
         return m;
-      })
+      }),
     );
 
     setIsGRNModalOpen(false);
-    setGrnSuccessMsg(`GRN #${newGRN.grnNo} recorded successfully! Stock ledger updated.`);
-    setSupplier('');
-    setVehicleNo('');
-    setReceivedQty('');
-    setUnitRate('');
-    setRemarks('');
-    setTimeout(() => setGrnSuccessMsg(''), 4000);
+    setGrnSuccessMsg(
+      `GRN #${newGRN.grnNo} recorded successfully! Stock ledger updated.`,
+    );
+    setSupplier("");
+    setVehicleNo("");
+    setReceivedQty("");
+    setUnitRate("");
+    setRemarks("");
+    setTimeout(() => setGrnSuccessMsg(""), 4000);
   };
 
   return (
@@ -111,9 +135,12 @@ export default function MaterialsPage() {
       {/* Header action banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-xl border border-border shadow-sm-warm">
         <div>
-          <h2 className="text-base font-semibold text-ink">Material Stock & Consumption Ledger</h2>
+          <h2 className="text-base font-semibold text-ink">
+            Material Stock & Consumption Ledger
+          </h2>
           <p className="text-xs text-muted mt-0.5">
-            Auto-reconciled material balance, site consumption variance, and Goods Received Notes (GRN)
+            Auto-reconciled material balance, site consumption variance, and
+            Goods Received Notes (GRN)
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -139,31 +166,47 @@ export default function MaterialsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white p-4 rounded-xl border border-border shadow-sm-warm">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted font-medium">Tracked Materials</span>
+            <span className="text-xs text-muted font-medium">
+              Tracked Materials
+            </span>
             <Package size={16} className="text-muted" />
           </div>
-          <div className="text-2xl font-semibold text-ink mt-2">{materials.length} Items</div>
-          <div className="text-2xs text-muted mt-1">Across civil, structural & finishing</div>
+          <div className="text-2xl font-semibold text-ink mt-2">
+            {materials.length} Items
+          </div>
+          <div className="text-2xs text-muted mt-1">
+            Across civil, structural & finishing
+          </div>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-rust/30 shadow-sm-warm bg-rust/[0.02]">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-rust font-medium">Excess Consumption Alert</span>
+            <span className="text-xs text-rust font-medium">
+              Excess Consumption Alert
+            </span>
             <AlertTriangle size={16} className="text-rust" />
           </div>
           <div className="text-2xl font-semibold text-rust mt-2">
             ₨ {totalVarianceCost.toLocaleString()}
           </div>
-          <div className="text-2xs text-muted mt-1">Over-consumption cost impact on cement & steel</div>
+          <div className="text-2xs text-muted mt-1">
+            Over-consumption cost impact on cement & steel
+          </div>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-border shadow-sm-warm">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted font-medium">Recent GRN Entries</span>
+            <span className="text-xs text-muted font-medium">
+              Recent GRN Entries
+            </span>
             <FileCheck size={16} className="text-accent" />
           </div>
-          <div className="text-2xl font-semibold text-ink mt-2">{grnList.length} Notes</div>
-          <div className="text-2xs text-muted mt-1">Direct from registered vendors</div>
+          <div className="text-2xl font-semibold text-ink mt-2">
+            {grnList.length} Notes
+          </div>
+          <div className="text-2xs text-muted mt-1">
+            Direct from registered vendors
+          </div>
         </div>
       </div>
 
@@ -173,7 +216,10 @@ export default function MaterialsPage() {
         <div className="p-4 border-b border-border flex flex-col sm:flex-row items-center justify-between gap-3 bg-surface/40">
           <div className="flex items-center gap-2 w-full sm:w-72">
             <div className="relative w-full">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+              <Search
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
+              />
               <input
                 type="text"
                 value={searchTerm}
@@ -186,20 +232,22 @@ export default function MaterialsPage() {
 
           <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
             <Filter size={13} className="text-muted" />
-            <span className="text-2xs text-muted uppercase tracking-wider">Status:</span>
+            <span className="text-2xs text-muted uppercase tracking-wider">
+              Status:
+            </span>
             <div className="flex gap-1">
               {[
-                { id: 'all', label: 'All Items' },
-                { id: 'over-consumed', label: 'Over-Consumed' },
-                { id: 'low-stock', label: 'Low Stock' },
+                { id: "all", label: "All Items" },
+                { id: "over-consumed", label: "Over-Consumed" },
+                { id: "low-stock", label: "Low Stock" },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setFilterStatus(tab.id)}
                   className={`text-2xs px-2.5 py-1 rounded-md transition-colors ${
                     filterStatus === tab.id
-                      ? 'bg-accent text-white font-medium'
-                      : 'text-muted hover:bg-surface border border-transparent'
+                      ? "bg-accent text-white font-medium"
+                      : "text-muted hover:bg-surface border border-transparent"
                   }`}
                 >
                   {tab.label}
@@ -227,15 +275,17 @@ export default function MaterialsPage() {
             </thead>
             <tbody>
               {filteredMaterials.map((row) => {
-                const isOver = row.status === 'over-consumed';
-                const isLow = row.status === 'low-stock';
+                const isOver = row.status === "over-consumed";
+                const isLow = row.status === "low-stock";
 
                 return (
                   <tr
                     key={row.id}
-                    className={`${isOver ? 'bg-rust/[0.04]' : isLow ? 'bg-critical/[0.02]' : ''}`}
+                    className={`${isOver ? "bg-rust/[0.04]" : isLow ? "bg-critical/[0.02]" : ""}`}
                   >
-                    <td className="font-mono text-2xs text-muted font-medium">{row.materialCode}</td>
+                    <td className="font-mono text-2xs text-muted font-medium">
+                      {row.materialCode}
+                    </td>
                     <td className="font-medium text-ink">
                       <div className="flex items-center gap-1.5">
                         <span>{row.material}</span>
@@ -250,7 +300,9 @@ export default function MaterialsPage() {
                       </div>
                     </td>
                     <td className="text-muted text-2xs">{row.unit}</td>
-                    <td className="text-right tabular-nums text-muted">{row.openingStock.toLocaleString()}</td>
+                    <td className="text-right tabular-nums text-muted">
+                      {row.openingStock.toLocaleString()}
+                    </td>
                     <td className="text-right tabular-nums text-ink font-medium">
                       <span className="text-accent flex items-center justify-end gap-0.5">
                         <ArrowDownRight size={12} />
@@ -266,36 +318,48 @@ export default function MaterialsPage() {
                     <td className="text-right tabular-nums font-semibold text-ink bg-surface/50">
                       {row.closingStock.toLocaleString()}
                     </td>
-                    <td className="text-right tabular-nums text-muted">{row.estimatedConsumption.toLocaleString()}</td>
+                    <td className="text-right tabular-nums text-muted">
+                      {row.estimatedConsumption.toLocaleString()}
+                    </td>
                     <td className="text-right tabular-nums">
                       <span
                         className={`font-medium ${
                           row.variance > 0
-                            ? 'text-rust font-semibold'
+                            ? "text-rust font-semibold"
                             : row.variance < 0
-                            ? 'text-success'
-                            : 'text-muted'
+                              ? "text-success"
+                              : "text-muted"
                         }`}
                       >
-                        {row.variance > 0 ? `+${row.variance.toLocaleString()}` : row.variance.toLocaleString()}
+                        {row.variance > 0
+                          ? `+${row.variance.toLocaleString()}`
+                          : row.variance.toLocaleString()}
                         <span className="text-2xs opacity-75 ml-1">
-                          ({row.variancePct > 0 ? `+${row.variancePct}%` : `${row.variancePct}%`})
+                          (
+                          {row.variancePct > 0
+                            ? `+${row.variancePct}%`
+                            : `${row.variancePct}%`}
+                          )
                         </span>
                       </span>
                     </td>
                     <td>
-                      {row.status === 'over-consumed' && (
+                      {row.status === "over-consumed" && (
                         <span className="badge badge-rust flex items-center gap-1">
                           <AlertTriangle size={10} /> Over-Consumed
                         </span>
                       )}
-                      {row.status === 'low-stock' && (
+                      {row.status === "low-stock" && (
                         <span className="badge badge-critical flex items-center gap-1">
                           <AlertTriangle size={10} /> Low Stock
                         </span>
                       )}
-                      {row.status === 'ok' && <span className="badge badge-success">Normal</span>}
-                      {row.status === 'normal' && <span className="badge badge-muted">Adequate</span>}
+                      {row.status === "ok" && (
+                        <span className="badge badge-success">Normal</span>
+                      )}
+                      {row.status === "normal" && (
+                        <span className="badge badge-muted">Adequate</span>
+                      )}
                     </td>
                   </tr>
                 );
@@ -309,10 +373,16 @@ export default function MaterialsPage() {
       <div className="bg-white rounded-xl border border-border shadow-sm-warm overflow-hidden">
         <div className="px-5 py-4 border-b border-border flex items-center justify-between">
           <div>
-            <h3 className="text-sm font-semibold text-ink">Recent Goods Received Notes (GRN)</h3>
-            <p className="text-xs text-muted mt-0.5">Verified gate entries and delivery challans</p>
+            <h3 className="text-sm font-semibold text-ink">
+              Recent Goods Received Notes (GRN)
+            </h3>
+            <p className="text-xs text-muted mt-0.5">
+              Verified gate entries and delivery challans
+            </p>
           </div>
-          <span className="text-2xs text-muted">Showing {grnList.length} recent delivery receipts</span>
+          <span className="text-2xs text-muted">
+            Showing {grnList.length} recent delivery receipts
+          </span>
         </div>
 
         <div className="overflow-x-auto">
@@ -333,20 +403,34 @@ export default function MaterialsPage() {
             <tbody>
               {grnList.map((grn) => (
                 <tr key={grn.id}>
-                  <td className="font-mono text-2xs text-accent font-semibold">{grn.grnNo}</td>
-                  <td className="text-2xs text-muted whitespace-nowrap">{grn.date}</td>
+                  <td className="font-mono text-2xs text-accent font-semibold">
+                    {grn.grnNo}
+                  </td>
+                  <td className="text-2xs text-muted whitespace-nowrap">
+                    {grn.date}
+                  </td>
                   <td className="font-medium text-ink">{grn.supplier}</td>
-                  <td className="font-mono text-2xs text-muted">{grn.vehicleNo}</td>
+                  <td className="font-mono text-2xs text-muted">
+                    {grn.vehicleNo}
+                  </td>
                   <td>
                     <span className="font-semibold text-ink">
                       {grn.receivedQty.toLocaleString()} {grn.unit}
                     </span>
-                    <span className="text-2xs text-muted ml-1">({grn.material})</span>
+                    <span className="text-2xs text-muted ml-1">
+                      ({grn.material})
+                    </span>
                   </td>
-                  <td className="text-right tabular-nums text-muted">₨ {grn.rate.toLocaleString()}</td>
-                  <td className="text-right tabular-nums font-semibold text-ink">₨ {grn.amount.toLocaleString()}</td>
+                  <td className="text-right tabular-nums text-muted">
+                    ₨ {grn.rate.toLocaleString()}
+                  </td>
+                  <td className="text-right tabular-nums font-semibold text-ink">
+                    ₨ {grn.amount.toLocaleString()}
+                  </td>
                   <td className="text-2xs text-muted">{grn.receivedBy}</td>
-                  <td className="text-2xs text-muted italic max-w-xs truncate">{grn.remarks}</td>
+                  <td className="text-2xs text-muted italic max-w-xs truncate">
+                    {grn.remarks}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -361,7 +445,9 @@ export default function MaterialsPage() {
             <div className="px-6 py-4 bg-ink text-white flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Truck size={16} className="text-accent-light" />
-                <h3 className="text-sm font-semibold">New Goods Received Note (GRN)</h3>
+                <h3 className="text-sm font-semibold">
+                  New Goods Received Note (GRN)
+                </h3>
               </div>
               <button
                 onClick={() => setIsGRNModalOpen(false)}

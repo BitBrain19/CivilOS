@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useProject } from '@/lib/context';
-import { getLaborByProject, laborGangs, LaborGang } from '@/data/labor';
+import { useState } from "react";
+import { useProject } from "@/lib/context";
+import { getLaborByProject, laborGangs, LaborGang } from "@/data/labor";
 import {
   Users,
   HardHat,
@@ -15,29 +15,30 @@ import {
   CheckCircle2,
   AlertCircle,
   X,
-} from 'lucide-react';
+} from "lucide-react";
 
 export default function LaborPage() {
   const { activeProject } = useProject();
   const initialGangs = getLaborByProject(activeProject.id);
   const [gangs, setGangs] = useState<LaborGang[]>(initialGangs);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [successMsg, setSuccessMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState("");
 
   // New Gang form state
-  const [naikeName, setNaikeName] = useState('');
-  const [gangName, setGangName] = useState('');
-  const [masonCount, setMasonCount] = useState('4');
-  const [helperCount, setHelperCount] = useState('6');
-  const [barBenderCount, setBarBenderCount] = useState('0');
-  const [activity, setActivity] = useState('');
-  const [workLocation, setWorkLocation] = useState('');
-  const [remarks, setRemarks] = useState('');
+  const [naikeName, setNaikeName] = useState("");
+  const [gangName, setGangName] = useState("");
+  const [masonCount, setMasonCount] = useState("4");
+  const [helperCount, setHelperCount] = useState("6");
+  const [barBenderCount, setBarBenderCount] = useState("0");
+  const [activity, setActivity] = useState("");
+  const [workLocation, setWorkLocation] = useState("");
+  const [remarks, setRemarks] = useState("");
 
   const totalHeadcount = gangs.reduce((sum, g) => sum + g.totalStrength, 0);
   const totalPresent = gangs.reduce((sum, g) => sum + g.presentToday, 0);
   const totalAbsent = totalHeadcount - totalPresent;
-  const attendanceRate = totalHeadcount > 0 ? Math.round((totalPresent / totalHeadcount) * 100) : 0;
+  const attendanceRate =
+    totalHeadcount > 0 ? Math.round((totalPresent / totalHeadcount) * 100) : 0;
 
   const handleAddGang = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,28 +55,36 @@ export default function LaborPage() {
       naikeName,
       gangName: gangName || `${naikeName}'s Gang`,
       trades: [
-        ...(mCount > 0 ? [{ trade: 'Mason', count: mCount, present: mCount }] : []),
-        ...(hCount > 0 ? [{ trade: 'Helper / Bharat', count: hCount, present: hCount }] : []),
-        ...(bCount > 0 ? [{ trade: 'Bar-bender', count: bCount, present: bCount }] : []),
+        ...(mCount > 0
+          ? [{ trade: "Mason", count: mCount, present: mCount }]
+          : []),
+        ...(hCount > 0
+          ? [{ trade: "Helper / Bharat", count: hCount, present: hCount }]
+          : []),
+        ...(bCount > 0
+          ? [{ trade: "Bar-bender", count: bCount, present: bCount }]
+          : []),
       ],
       totalStrength: total,
       presentToday: total,
       assignedActivity: activity,
-      boqItemId: 'b1-custom',
-      workLocation: workLocation || 'Main Structure',
-      date: new Date().toISOString().split('T')[0],
-      remarks: remarks || 'Gangs deployed as scheduled.',
+      boqItemId: "b1-custom",
+      workLocation: workLocation || "Main Structure",
+      date: new Date().toISOString().split("T")[0],
+      remarks: remarks || "Gangs deployed as scheduled.",
     };
 
     setGangs([...gangs, newGang]);
     setIsModalOpen(false);
-    setSuccessMsg(`Gang "${newGang.gangName}" successfully registered for today's shift.`);
-    setNaikeName('');
-    setGangName('');
-    setActivity('');
-    setWorkLocation('');
-    setRemarks('');
-    setTimeout(() => setSuccessMsg(''), 4000);
+    setSuccessMsg(
+      `Gang "${newGang.gangName}" successfully registered for today's shift.`,
+    );
+    setNaikeName("");
+    setGangName("");
+    setActivity("");
+    setWorkLocation("");
+    setRemarks("");
+    setTimeout(() => setSuccessMsg(""), 4000);
   };
 
   return (
@@ -83,9 +92,12 @@ export default function LaborPage() {
       {/* Header action banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-xl border border-border shadow-sm-warm">
         <div>
-          <h2 className="text-base font-semibold text-ink">Labor Gangs & Daily Manpower Deployment</h2>
+          <h2 className="text-base font-semibold text-ink">
+            Labor Gangs & Daily Manpower Deployment
+          </h2>
           <p className="text-xs text-muted mt-0.5">
-            Naike master roll, trade distribution, site attendance, and specific BOQ activity assignments
+            Naike master roll, trade distribution, site attendance, and specific
+            BOQ activity assignments
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -111,29 +123,47 @@ export default function LaborPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-xl border border-border shadow-sm-warm">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted font-medium">Total Registered Force</span>
+            <span className="text-xs text-muted font-medium">
+              Total Registered Force
+            </span>
             <Users size={16} className="text-muted" />
           </div>
-          <div className="text-2xl font-semibold text-ink mt-2">{totalHeadcount} Workers</div>
-          <div className="text-2xs text-muted mt-1">{gangs.length} Active Contractor Gangs</div>
+          <div className="text-2xl font-semibold text-ink mt-2">
+            {totalHeadcount} Workers
+          </div>
+          <div className="text-2xs text-muted mt-1">
+            {gangs.length} Active Contractor Gangs
+          </div>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-border shadow-sm-warm">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-success font-medium">Present on Site Today</span>
+            <span className="text-xs text-success font-medium">
+              Present on Site Today
+            </span>
             <UserCheck size={16} className="text-success" />
           </div>
-          <div className="text-2xl font-semibold text-success mt-2">{totalPresent} Workers</div>
-          <div className="text-2xs text-muted mt-1">{attendanceRate}% Overall Attendance</div>
+          <div className="text-2xl font-semibold text-success mt-2">
+            {totalPresent} Workers
+          </div>
+          <div className="text-2xs text-muted mt-1">
+            {attendanceRate}% Overall Attendance
+          </div>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-border shadow-sm-warm">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-rust font-medium">Absentees / Shortfall</span>
+            <span className="text-xs text-rust font-medium">
+              Absentees / Shortfall
+            </span>
             <UserX size={16} className="text-rust" />
           </div>
-          <div className="text-2xl font-semibold text-rust mt-2">{totalAbsent} Absent</div>
-          <div className="text-2xs text-muted mt-1">Reported by site Naikes at muster</div>
+          <div className="text-2xl font-semibold text-rust mt-2">
+            {totalAbsent} Absent
+          </div>
+          <div className="text-2xs text-muted mt-1">
+            Reported by site Naikes at muster
+          </div>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-border shadow-sm-warm">
@@ -141,15 +171,21 @@ export default function LaborPage() {
             <span className="text-xs text-accent font-medium">Shift Date</span>
             <Calendar size={16} className="text-accent" />
           </div>
-          <div className="text-base font-semibold text-ink mt-2">Tuesday, 01 Oct 2024</div>
-          <div className="text-2xs text-muted mt-1">Day shift: 07:30 to 17:30 NPT</div>
+          <div className="text-base font-semibold text-ink mt-2">
+            Tuesday, 01 Oct 2024
+          </div>
+          <div className="text-2xs text-muted mt-1">
+            Day shift: 07:30 to 17:30 NPT
+          </div>
         </div>
       </div>
 
       {/* Gang Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {gangs.map((gang) => {
-          const gangAttPct = Math.round((gang.presentToday / gang.totalStrength) * 100);
+          const gangAttPct = Math.round(
+            (gang.presentToday / gang.totalStrength) * 100,
+          );
           const hasAbsence = gang.presentToday < gang.totalStrength;
 
           return (
@@ -165,13 +201,21 @@ export default function LaborPage() {
                       <HardHat size={16} />
                     </div>
                     <div>
-                      <h3 className="text-xs font-semibold text-ink leading-tight">{gang.gangName}</h3>
-                      <div className="text-2xs text-muted mt-0.5">Naike: {gang.naikeName}</div>
+                      <h3 className="text-xs font-semibold text-ink leading-tight">
+                        {gang.gangName}
+                      </h3>
+                      <div className="text-2xs text-muted mt-0.5">
+                        Naike: {gang.naikeName}
+                      </div>
                     </div>
                   </div>
                   <span
                     className={`badge text-2xs ${
-                      gangAttPct === 100 ? 'badge-success' : gangAttPct >= 80 ? 'badge-rust' : 'badge-critical'
+                      gangAttPct === 100
+                        ? "badge-success"
+                        : gangAttPct >= 80
+                          ? "badge-rust"
+                          : "badge-critical"
                     }`}
                   >
                     {gang.presentToday}/{gang.totalStrength} ({gangAttPct}%)
@@ -193,7 +237,9 @@ export default function LaborPage() {
                           <span className="text-muted">{t.trade}:</span>
                           <span className="font-semibold">{t.present}</span>
                           {t.present < t.count && (
-                            <span className="text-critical text-2xs">({t.count - t.present} absent)</span>
+                            <span className="text-critical text-2xs">
+                              ({t.count - t.present} absent)
+                            </span>
                           )}
                         </div>
                       ))}
@@ -205,7 +251,9 @@ export default function LaborPage() {
                     <div className="text-2xs font-medium text-muted uppercase tracking-wider mb-1 flex items-center gap-1">
                       <Briefcase size={10} /> Assigned Task
                     </div>
-                    <div className="text-xs font-medium text-ink">{gang.assignedActivity}</div>
+                    <div className="text-xs font-medium text-ink">
+                      {gang.assignedActivity}
+                    </div>
                   </div>
 
                   {/* Location */}
@@ -252,7 +300,9 @@ export default function LaborPage() {
             <div className="px-6 py-4 bg-ink text-white flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Users size={16} className="text-accent-light" />
-                <h3 className="text-sm font-semibold">Deploy / Register Labor Gang</h3>
+                <h3 className="text-sm font-semibold">
+                  Deploy / Register Labor Gang
+                </h3>
               </div>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -292,7 +342,9 @@ export default function LaborPage() {
 
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="text-2xs font-medium text-muted uppercase tracking-wider block mb-1">Masons</label>
+                  <label className="text-2xs font-medium text-muted uppercase tracking-wider block mb-1">
+                    Masons
+                  </label>
                   <input
                     type="number"
                     min="0"
@@ -302,7 +354,9 @@ export default function LaborPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-2xs font-medium text-muted uppercase tracking-wider block mb-1">Helpers</label>
+                  <label className="text-2xs font-medium text-muted uppercase tracking-wider block mb-1">
+                    Helpers
+                  </label>
                   <input
                     type="number"
                     min="0"
@@ -312,7 +366,9 @@ export default function LaborPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-2xs font-medium text-muted uppercase tracking-wider block mb-1">Bar-benders</label>
+                  <label className="text-2xs font-medium text-muted uppercase tracking-wider block mb-1">
+                    Bar-benders
+                  </label>
                   <input
                     type="number"
                     min="0"
