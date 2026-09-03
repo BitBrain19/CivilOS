@@ -146,10 +146,10 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl">
+    <div className="p-4 sm:p-6 space-y-6 max-w-7xl">
 
       {/* Project summary row */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard
           label="Contract Value"
           value={Math.round(activeProject.contractValue / 100000)}
@@ -180,7 +180,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Charts row */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
         {/* S-Curve */}
         <div className="col-span-2 bg-white rounded-xl border border-border shadow-sm-warm p-5">
@@ -265,7 +265,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Burn rate + Resources + Delays */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
         {/* Burn Rate */}
         <div className="bg-white rounded-xl border border-border shadow-sm-warm p-5">
@@ -367,12 +367,12 @@ export default function DashboardPage() {
         <h3 className="text-sm font-semibold text-ink mb-4">All Projects Overview</h3>
         <div className="space-y-3">
           {projects.map((p) => (
-            <div key={p.id} className="flex items-center gap-4 py-2.5 border-b border-surface last:border-0">
-              <div className="w-36 flex-shrink-0">
+            <div key={p.id} className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 py-2.5 border-b border-surface last:border-0">
+              <div className="w-full sm:w-36 flex-shrink-0">
                 <div className="text-xs font-medium text-ink truncate">{p.name}</div>
                 <div className="text-2xs text-muted mt-0.5">{p.code}</div>
               </div>
-              <div className="flex-1 space-y-1">
+              <div className="flex-1 min-w-0 w-full space-y-1">
                 <div className="flex items-center gap-2">
                   <div className="flex-1 h-1.5 bg-surface rounded-full overflow-hidden">
                     <div className="h-full bg-border-strong/50 rounded-full" style={{ width: `${p.plannedProgress}%` }} />
@@ -394,11 +394,11 @@ export default function DashboardPage() {
                   </span>
                 </div>
               </div>
-              <div className="text-right flex-shrink-0 w-28">
+              <div className="flex items-center justify-between sm:block sm:text-right flex-shrink-0 sm:w-28 w-full">
                 <div className="text-xs font-medium text-ink">{formatNPR(p.contractValue)}</div>
                 <div className="text-2xs text-muted">Contract value</div>
               </div>
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0 self-end sm:self-auto">
                 <span className={`badge text-2xs ${
                   p.status === 'on-track' ? 'badge-success' : p.status === 'delayed' ? 'badge-rust' : 'badge-critical'
                 }`}>

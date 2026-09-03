@@ -37,7 +37,7 @@ const projectTypeIcon: Record<string, string> = {
   commercial: '🏗️',
 };
 
-export default function Sidebar() {
+export default function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const pathname = usePathname();
   const { activeProject, setActiveProject, allProjects } = useProject();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -45,7 +45,9 @@ export default function Sidebar() {
   if (pathname === '/login' || pathname === '/') return null;
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-60 bg-ink flex flex-col z-40 select-none">
+    <>
+      {open && <button aria-label="Close navigation" onClick={onClose} className="fixed inset-0 bg-ink/40 z-40 lg:hidden" />}
+      <aside className={`fixed left-0 top-0 h-screen w-60 bg-ink flex flex-col z-50 select-none transition-transform duration-200 lg:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full'}`}>
       {/* Brand */}
       <div className="px-5 pt-5 pb-4 border-b border-white/10">
         <div className="flex items-center gap-2.5">
@@ -146,6 +148,7 @@ export default function Sidebar() {
           </div>
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

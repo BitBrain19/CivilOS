@@ -31,7 +31,7 @@ export default function DPRPage() {
   };
 
   return (
-    <div className="p-6 flex gap-6">
+    <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6">
       {/* Left: context / today's log */}
       <div className="flex-1 min-w-0">
         <div className="bg-white rounded-xl border border-border shadow-sm-warm overflow-hidden">
@@ -113,8 +113,8 @@ export default function DPRPage() {
       </div>
 
       {/* Right: Mobile-styled DPR form */}
-      <div className="flex-shrink-0">
-        <div className="w-[340px] bg-ink rounded-2xl overflow-hidden shadow-lg-warm">
+      <div className="flex-shrink-0 flex self-start justify-center lg:justify-start">
+        <div className="w-full max-w-[340px] bg-white rounded-2xl overflow-hidden shadow-lg-warm">
           {/* Phone status bar */}
           <div className="bg-ink px-4 pt-3 pb-1 flex justify-between items-center">
             <span className="text-white/50 text-2xs">9:41</span>
