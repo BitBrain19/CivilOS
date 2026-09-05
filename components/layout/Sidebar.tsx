@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useProject } from "@/lib/context";
 import {
   LayoutDashboard,
+  CalendarCheck,
   ClipboardList,
   Package,
   Users,
@@ -21,6 +22,7 @@ import { useState } from "react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/assignment", label: "Daily Work Assignment", icon: CalendarCheck },
   { href: "/dpr", label: "Daily Progress Report", icon: ClipboardList },
   { href: "/materials", label: "Material Ledger", icon: Package },
   { href: "/labor", label: "Labor Gang Log", icon: Users },

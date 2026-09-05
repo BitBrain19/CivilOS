@@ -20,6 +20,9 @@ export interface DPREntry {
   certifiedBy?: string;
   certifiedAt?: string;
   mbRef?: string;
+  flag?: 'no-assignment' | 'unplanned-work';
+  flagReason?: string;
+  certificationReason?: string;
 }
 
 export const dprEntries: DPREntry[] = [
@@ -33,7 +36,7 @@ export const dprEntries: DPREntry[] = [
     unit: 'cum',
     quantityToday: 18.5,
     cumulativeQty: 552,
-    gang: 'Ram Bahadur Naike\'s Mason Gang',
+    gang: "Ram Bahadur Naike's Mason Gang",
     remarks: 'Slab pour 5th floor east wing completed. Vibration done adequately.',
     photoRef: '/photos/dpr-slab-pour.jpg',
     geotag: 'Shantinagar, 27.7041° N, 85.3381° E',
@@ -52,7 +55,7 @@ export const dprEntries: DPREntry[] = [
     unit: 'kg',
     quantityToday: 2200,
     cumulativeQty: 111000,
-    gang: 'Hari Tamang\'s Bar Benders',
+    gang: "Hari Tamang's Bar Benders",
     remarks: '6th floor column cages placed and tied. 12mm and 16mm bars used.',
     photoRef: '/photos/dpr-rebar.jpg',
     geotag: 'Shantinagar, 27.7041° N, 85.3381° E',
@@ -71,7 +74,7 @@ export const dprEntries: DPREntry[] = [
     unit: 'cum',
     quantityToday: 4.2,
     cumulativeQty: 660,
-    gang: 'Ram Bahadur Naike\'s Mason Gang',
+    gang: "Ram Bahadur Naike's Mason Gang",
     remarks: 'Block B ground floor partition walls. CM ratio maintained 1:4.',
     photoRef: '/photos/dpr-brickwork.jpg',
     geotag: 'Shantinagar, 27.7041° N, 85.3381° E',
@@ -90,12 +93,13 @@ export const dprEntries: DPREntry[] = [
     unit: 'cum',
     quantityToday: 6.8,
     cumulativeQty: 366.8,
-    gang: 'Ram Bahadur Naike\'s Mason Gang',
+    gang: "Ram Bahadur Naike's Mason Gang",
     remarks: 'C6 to C12 column pour completed. Curing started.',
     photoRef: '/photos/dpr-column.jpg',
     geotag: 'Shantinagar, 27.7041° N, 85.3381° E',
     timestamp: '2024-10-01T15:30:00+05:45',
     certified: false,
+    // Planned & matches assignment -> no flag
   },
   {
     id: 'dpr-005',
@@ -106,12 +110,14 @@ export const dprEntries: DPREntry[] = [
     unit: 'sqm',
     quantityToday: 120,
     cumulativeQty: 7520,
-    gang: 'Ram Bahadur Naike\'s Mason Gang',
-    remarks: '3rd floor east wing internal plastering.',
+    gang: "Ram Bahadur Naike's Mason Gang",
+    remarks: '3rd floor east wing internal plastering taken up early due to idle masonry hands.',
     photoRef: '/photos/dpr-plaster.jpg',
     geotag: 'Shantinagar, 27.7041° N, 85.3381° E',
     timestamp: '2024-10-01T16:00:00+05:45',
     certified: false,
+    flag: 'unplanned-work',
+    flagReason: 'Activity 1.08 Plastering was not on published assignment for Oct 1',
   },
   {
     id: 'dpr-006',
@@ -128,6 +134,26 @@ export const dprEntries: DPREntry[] = [
     geotag: 'Shantinagar, 27.7041° N, 85.3381° E',
     timestamp: '2024-10-01T16:45:00+05:45',
     certified: false,
+    // Planned & matches assignment -> no flag
+  },
+  // Entry with no supervisor assignment published for date
+  {
+    id: 'dpr-008',
+    projectId: 'p1',
+    date: '2024-09-28',
+    boqItemId: 'b1-6',
+    boqItemDesc: 'TMT Steel Bar Fe500 Reinforcement',
+    unit: 'kg',
+    quantityToday: 950,
+    cumulativeQty: 108800,
+    gang: "Hari Tamang's Bar Benders",
+    remarks: 'Weekend urgent beam stirrup fabrication at ground yard.',
+    photoRef: '/photos/dpr-rebar.jpg',
+    geotag: 'Shantinagar, 27.7041° N, 85.3381° E',
+    timestamp: '2024-09-28T17:00:00+05:45',
+    certified: false,
+    flag: 'no-assignment',
+    flagReason: 'No supervisor assignment on file for 2024-09-28',
   },
   // p2 entries
   {
