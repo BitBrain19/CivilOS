@@ -16,8 +16,11 @@ import {
   PiggyBank,
   ChevronDown,
   Building2,
+  Building,
+  Construction,
   HardHat,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -33,10 +36,10 @@ const navItems = [
   { href: "/retention", label: "Retention & Aging", icon: PiggyBank },
 ];
 
-const projectTypeIcon: Record<string, string> = {
-  residential: "🏢",
-  bridge: "🌉",
-  commercial: "🏗️",
+const projectTypeIcon: Record<string, LucideIcon> = {
+  residential: Building2,
+  bridge: Construction,
+  commercial: Building,
 };
 
 export default function Sidebar({
@@ -90,9 +93,10 @@ export default function Sidebar({
             onClick={() => setDropdownOpen(!dropdownOpen)}
             className="w-full flex items-center gap-2 px-2 py-2 rounded-md hover:bg-white/8 transition-colors group"
           >
-            <span className="text-sm">
-              {projectTypeIcon[activeProject.type]}
-            </span>
+            {(() => {
+              const ProjectIcon = projectTypeIcon[activeProject.type];
+              return <ProjectIcon size={15} className="text-white/70" />;
+            })()}
             <div className="flex-1 text-left min-w-0">
               <div className="text-white/90 text-xs font-medium leading-tight truncate">
                 {activeProject.name}
@@ -120,7 +124,10 @@ export default function Sidebar({
                     p.id === activeProject.id ? "bg-accent/30" : ""
                   }`}
                 >
-                  <span className="text-sm">{projectTypeIcon[p.type]}</span>
+                  {(() => {
+                    const ProjectIcon = projectTypeIcon[p.type];
+                    return <ProjectIcon size={15} className="text-white/70" />;
+                  })()}
                   <div className="min-w-0">
                     <div
                       className={`text-xs leading-tight truncate ${p.id === activeProject.id ? "text-white" : "text-white/70"}`}

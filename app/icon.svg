@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>CivilOS</title>
+  <rect width="64" height="64" rx="14" fill="#3A5A73"/>
+  <path d="M18 39h28M21 39v-8.5c0-5.2 4.2-9.5 9.5-9.5h3c5.2 0 9.5 4.3 9.5 9.5V39M25 29h14M32 21v-4" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M16 43h32" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+</svg>
