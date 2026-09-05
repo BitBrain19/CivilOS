@@ -7,7 +7,7 @@ import AppShell from '@/components/layout/AppShell';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'CivilOS — Construction Site Management',
+  title: 'CivilOS',
   description: 'Professional construction site management system for Nepali construction companies. Track DPR, materials, labor, billing, and certifications.',
 };
 
